@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "ScaffNetConsole": {
+      "commandName": "Project",
+      "commandLineArgs": "arch-cl"
+    }
+  }
+}
