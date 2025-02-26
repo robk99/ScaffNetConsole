@@ -2,7 +2,7 @@
   "profiles": {
     "ScaffNetConsole": {
       "commandName": "Project",
-      "commandLineArgs": "arch-cl"
+      "commandLineArgs": "arch-cl CleanArchitecture C:/CleanArchitecture"
     }
   }
 }
