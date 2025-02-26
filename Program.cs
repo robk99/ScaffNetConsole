@@ -2,13 +2,12 @@
 using ScaffNet.Utils.ErrorHandling;
 using ScaffNet.Utils;
 using System.Threading.Tasks;
-
-using Constants = ScaffNet.Data.Constants;
 using ScaffNetConsole;
 using Spectre.Console.Cli;
 using Spectre.Console;
 using System.ComponentModel;
 
+using Constants = ScaffNet.Data.Constants;
 
 class Program
 {
@@ -18,7 +17,6 @@ class Program
 
         var app = new CommandApp();
 
-        // Set up custom help output
         app.Configure(config =>
         {
             config.SetApplicationName("ScaffNetConsole");
@@ -26,24 +24,45 @@ class Program
 
             config.AddCommand<ScaffoldCommand>("arch-cl")
                   .WithDescription("Scaffold a Clean Architecture project");
-
-            config.AddCommand<HelpCommand>("help")
-                  .WithDescription("Show available commands");
         });
 
+
+#if DEBUG
+        RunAppInALoop(app);
+        return 0;
+#else
         return app.Run(args);
+#endif
+    }
+
+    private static void RunAppInALoop(CommandApp app)
+    {
+        while (true)
+        {
+            var input = AnsiConsole.Ask<string>("[blue]Enter command (or 'exit' to quit):[/]");
+
+            if (input.Equals("exit", StringComparison.OrdinalIgnoreCase))
+            {
+                AnsiConsole.MarkupLine("[red]Exiting...[/]");
+                break;
+            }
+
+            try
+            {
+                app.Run(input.Split(' '));
+            }
+            catch (Exception ex)
+            {
+                AnsiConsole.MarkupLine($"[red]Error: {ex.Message}[/]");
+            }
+        }
     }
 }
 
-// 🏗️ Define the Scaffold Command
 public class ScaffoldCommand : Command<ScaffoldCommand.Settings>
 {
     public class Settings : CommandSettings
     {
-        [CommandArgument(0, "<Command>")]
-        [Description("The command to execute (e.g., 'arch-cl')")]
-        public string Command { get; set; }
-
         [CommandOption("-n|--name")]
         [Description("Project name (default: CleanArchitecture)")]
         [DefaultValue("CleanArchitecture")]
@@ -57,87 +76,17 @@ public class ScaffoldCommand : Command<ScaffoldCommand.Settings>
 
     public override int Execute(CommandContext context, Settings settings)
     {
-        if (settings.Command == "arch-cl")
-        {
-            AnsiConsole.MarkupLine("[green]Scaffolding Clean Architecture...[/]");
-            AnsiConsole.MarkupLine($"Project Name: [yellow]{settings.Name}[/]");
-            AnsiConsole.MarkupLine($"Project Path: [blue]{settings.Path}[/]");
+        AnsiConsole.MarkupLine("[green]Scaffolding Clean Architecture...[/]");
+        AnsiConsole.MarkupLine($"Project Name: [yellow]{settings.Name}[/]");
+        AnsiConsole.MarkupLine($"Project Path: [blue]{settings.Path}[/]");
 
-            CleanArchitectureScaffolder.Create(new CleanArchitectureArgs
-            {
-                SolutionName = settings.Name,
-                SolutionPath = settings.Path,
-                SourceFolder = "src"
-            });
-        }
-        else
+        CleanArchitectureScaffolder.Create(new CleanArchitectureArgs
         {
-            AnsiConsole.MarkupLine("[red]Error: Unknown command.[/]");
-        }
+            SolutionName = settings.Name,
+            SolutionPath = settings.Path,
+            SourceFolder = "src"
+        });
 
         return 0;
     }
 }
-
-// 🆘 Define a Custom Help Command
-public class HelpCommand : Command
-{
-    public override int Execute(CommandContext context)
-    {
-        AnsiConsole.WriteLine("Available commands:");
-        var table = new Table();
-        table.AddColumn("Command");
-        table.AddColumn("Description");
-
-        table.AddRow("[green]arch-cl[/]", "Scaffold a Clean Architecture project");
-        table.AddRow("[green]help[/]", "Show this help menu");
-
-        AnsiConsole.Write(table);
-        return 0;
-    }
-}
-
-//internal class Program
-//{
-//    private static void Main(string[] args)
-//    {
-//        try
-//        {
-//            if (args.Length == 0)
-//            {
-//                Console.WriteLine("No arguments provided");
-//                return;
-//            }
-
-//            Logger.SetupScaffLogger();
-
-//            if (args[0] == "arch-cl")
-//            {
-//                var solutonName = args.Length > 1 ? args[1] : Constants.SOLUTION_NAME;
-//                var solutionPath = args.Length > 2 ? args[2] : Constants.SOLUTION_PATH;
-
-//                CleanArchitectureScaffolder.Create(new CleanArchitectureArgs
-//                {
-//                    SolutionName = solutonName,
-//                    SolutionPath = solutionPath,
-//                    SourceFolder = "src"
-//                });
-//            }
-//            else
-//            {
-//                Console.WriteLine("Wrong argument.");
-//            }
-//        }
-//        catch (ScaffNetCommandException ex)
-//        {
-//            // clients will handle this further
-//            Console.WriteLine();
-//        }
-//        catch (Exception ex)
-//        {
-//            ScaffLogger.Default.LogError("Unhandled exception: " + ex.Message);
-//            throw new Exception("Unhandled error happened!");
-//            // clients will handle this further
-//        }
-//    }
-//}
