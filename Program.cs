@@ -1,13 +1,7 @@
-﻿using ScaffNet.Features.CleanArchitecture;
-using ScaffNet.Utils.ErrorHandling;
-using ScaffNet.Utils;
-using System.Threading.Tasks;
-using ScaffNetConsole;
-using Spectre.Console.Cli;
+﻿using ScaffNetConsole;
+using ScaffNetConsole.Architectures.CleanArchitecture;
 using Spectre.Console;
-using System.ComponentModel;
-
-using Constants = ScaffNet.Data.Constants;
+using Spectre.Console.Cli;
 
 class Program
 {
@@ -22,7 +16,7 @@ class Program
             config.SetApplicationName("ScaffNetConsole");
             config.SetApplicationVersion("1.0.0");
 
-            config.AddCommand<ScaffoldCommand>("arch-cl")
+            config.AddCommand<CleanArchitectureCommand>("arch-cl")
                   .WithDescription("Scaffold a Clean Architecture project");
         });
 
@@ -56,37 +50,5 @@ class Program
                 AnsiConsole.MarkupLine($"[red]Error: {ex.Message}[/]");
             }
         }
-    }
-}
-
-public class ScaffoldCommand : Command<ScaffoldCommand.Settings>
-{
-    public class Settings : CommandSettings
-    {
-        [CommandOption("-n|--name")]
-        [Description("Project name (default: CleanArchitecture)")]
-        [DefaultValue("CleanArchitecture")]
-        public string Name { get; set; }
-
-        [CommandOption("-p|--path")]
-        [Description("Project path (default: C:/CleanArchitecture)")]
-        [DefaultValue("C:/CleanArchitecture")]
-        public string Path { get; set; }
-    }
-
-    public override int Execute(CommandContext context, Settings settings)
-    {
-        AnsiConsole.MarkupLine("[green]Scaffolding Clean Architecture...[/]");
-        AnsiConsole.MarkupLine($"Project Name: [yellow]{settings.Name}[/]");
-        AnsiConsole.MarkupLine($"Project Path: [blue]{settings.Path}[/]");
-
-        CleanArchitectureScaffolder.Create(new CleanArchitectureArgs
-        {
-            SolutionName = settings.Name,
-            SolutionPath = settings.Path,
-            SourceFolder = "src"
-        });
-
-        return 0;
     }
 }
