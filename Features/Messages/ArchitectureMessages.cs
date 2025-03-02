@@ -1,6 +1,6 @@
 ﻿using Spectre.Console;
 
-namespace ScaffNetConsole.Architectures.Messages
+namespace ScaffNetConsole.Features.Messages
 {
     internal static class ArchitectureMessages
     {

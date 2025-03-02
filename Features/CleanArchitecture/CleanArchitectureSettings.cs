@@ -1,7 +1,7 @@
 ﻿using Spectre.Console.Cli;
 using System.ComponentModel;
 
-namespace ScaffNetConsole.Architectures.CleanArchitecture
+namespace ScaffNetConsole.Features.CleanArchitecture
 {
     internal class CleanArchitectureSettings : CommandSettings, IArchitectureSetting
     {

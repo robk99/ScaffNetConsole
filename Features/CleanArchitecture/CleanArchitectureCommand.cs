@@ -1,8 +1,8 @@
 ﻿using ScaffNet.Features.CleanArchitecture;
-using ScaffNetConsole.Architectures.Messages;
+using ScaffNetConsole.Features.Messages;
 using Spectre.Console.Cli;
 
-namespace ScaffNetConsole.Architectures.CleanArchitecture
+namespace ScaffNetConsole.Features.CleanArchitecture
 {
     internal class CleanArchitectureCommand : Command<CleanArchitectureSettings>
     {

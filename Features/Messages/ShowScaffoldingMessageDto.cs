@@ -1,4 +1,4 @@
-﻿namespace ScaffNetConsole.Architectures.Messages
+﻿namespace ScaffNetConsole.Features.Messages
 {
     internal class ShowScaffoldingMessageDto
     {

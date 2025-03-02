@@ -1,13 +1,38 @@
-﻿using ScaffNetConsole;
-using ScaffNetConsole.Architectures.CleanArchitecture;
+﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
+using ScaffNet.Utils;
+using ScaffNetConsole.Features.CleanArchitecture;
 using Spectre.Console;
 using Spectre.Console.Cli;
 
 class Program
 {
+    private static string _environment;
+
+
     static int Main(string[] args)
     {
-        Logger.SetupScaffLogger();
+#if DEBUG
+        _environment = "Development";
+#else
+_environment = "Production";
+#endif
+
+        var config = new ConfigurationBuilder()
+            .SetBasePath(Directory.GetCurrentDirectory())
+            .AddJsonFile($"appsettings.{_environment}.json", optional: true, reloadOnChange: true)
+            .Build();
+
+        using var loggerFactory = LoggerFactory.Create(builder =>
+        {
+            builder
+            .AddConfiguration(config.GetSection("Logging"))
+            .AddConsole();
+        });
+
+        var logger = loggerFactory.CreateLogger<Program>();
+
+        ScaffUtils.SetEventHandler(new ScaffNetConsole.Utils.EventHandler(logger));
 
         var app = new CommandApp();
 

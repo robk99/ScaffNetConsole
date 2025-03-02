@@ -1,4 +1,4 @@
-﻿namespace ScaffNetConsole.Architectures
+﻿namespace ScaffNetConsole.Features
 {
     internal interface IArchitectureSetting
     {
