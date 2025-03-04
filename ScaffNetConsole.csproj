@@ -1,12 +1,20 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
+    <Version>1.0.0</Version>
     <OutputType>Exe</OutputType>
     <PackAsTool>true</PackAsTool>
-    <ToolCommandName>scaf</ToolCommandName>
+    <RepositoryUrl>https://github.com/robk99/ScaffNetConsole</RepositoryUrl>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <ToolCommandName>scaff</ToolCommandName>
     <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+
+    <Description>
+      ScaffNetConsole: CLI for scaffolding .NET projects with predefined templates.
+      Layer on top of ScaffNet library.
+    </Description>
   </PropertyGroup>
 
   <ItemGroup>
@@ -17,7 +25,6 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
-
 
   <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="9.0.2" />
